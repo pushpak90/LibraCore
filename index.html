@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>LibraCore – Library Management System</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+        body {
+            font-family: "Segoe UI", Arial, sans-serif;
+            background-color: #f5f7fa;
+            color: #2c3e50;
+            margin: 0;
+            padding: 0;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 40px auto;
+            background: #ffffff;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+
+        h1 {
+            text-align: center;
+            color: #1f3a8a;
+            margin-bottom: 10px;
+        }
+
+        h2 {
+            color: #1e40af;
+            margin-top: 40px;
+            border-bottom: 2px solid #e5e7eb;
+            padding-bottom: 6px;
+        }
+
+        h3 {
+            color: #2563eb;
+            margin-top: 25px;
+        }
+
+        p {
+            line-height: 1.7;
+            margin: 12px 0;
+        }
+
+        ul {
+            margin: 10px 0 10px 20px;
+        }
+
+        li {
+            margin: 8px 0;
+        }
+
+        code {
+            background: #f1f5f9;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.95em;
+        }
+
+        .tagline {
+            text-align: center;
+            font-size: 1.1em;
+            color: #475569;
+            margin-bottom: 30px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+
+        th, td {
+            border: 1px solid #e5e7eb;
+            padding: 12px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f1f5f9;
+            font-weight: 600;
+        }
+
+        .endpoint {
+            background: #f8fafc;
+            padding: 10px;
+            border-left: 4px solid #2563eb;
+            margin: 10px 0;
+            font-family: monospace;
+        }
+
+        .footer {
+            margin-top: 50px;
+            text-align: center;
+            font-size: 0.9em;
+            color: #64748b;
+        }
+    </style>
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>LibraCore</h1>
+    <div class="tagline">
+        Secure Library Inventory & Lending Management API
+    </div>
+
+    <h2>Problem Statement</h2>
+    <p>
+        LibraCore is a backend RESTful API designed to manage the digital operations of a modern
+        library system, including book cataloging, user access control, and lending workflows.
+    </p>
+    <p>
+        The system replaces manual or semi-automated library processes with a secure, scalable,
+        and role-based backend service that ensures accurate tracking of books, controlled borrowing,
+        and proper enforcement of library policies.
+    </p>
+    <p>
+        The application is built using Spring Boot, persists data using MySQL, and implements
+        JWT-based stateless authentication to support secure access and horizontal scalability.
+    </p>
+
+    <h2>Business Objective</h2>
+    <ul>
+        <li>Maintain a centralized book catalog</li>
+        <li>Control book borrowing and return workflows</li>
+        <li>Enforce role-based permissions</li>
+        <li>Prevent over-issuing of books</li>
+        <li>Demonstrate real-world backend best practices</li>
+    </ul>
+
+    <h2>Assumptions & Constraints</h2>
+    <ul>
+        <li>Each book can have multiple physical copies</li>
+        <li>Users can borrow one copy per request</li>
+        <li>Borrowing duration and fines are handled externally</li>
+        <li>Librarians manage books globally</li>
+        <li>The system focuses only on inventory and lending</li>
+    </ul>
+
+    <h2>User Roles</h2>
+    <table>
+        <tr>
+            <th>Role</th>
+            <th>Description</th>
+        </tr>
+        <tr>
+            <td>MEMBER</td>
+            <td>Browse books and borrow available copies</td>
+        </tr>
+        <tr>
+            <td>LIBRARIAN</td>
+            <td>Manage book inventory and process returns</td>
+        </tr>
+        <tr>
+            <td>ADMIN</td>
+            <td>Onboard librarians and remove books</td>
+        </tr>
+    </table>
+
+    <h2>Functional Requirements</h2>
+
+    <h3>Authentication & Authorization</h3>
+    <ul>
+        <li>User registration using email and password</li>
+        <li>Passwords hashed using BCrypt</li>
+        <li>Default role assigned as MEMBER</li>
+        <li>JWT token generated on login/registration</li>
+    </ul>
+
+    <h3>Book Catalog Management</h3>
+    <ul>
+        <li>ISBN, Title, Author, Category</li>
+        <li>Total copies and available copies tracking</li>
+        <li>Public access to book listings</li>
+        <li>Admin-only book creation and deletion</li>
+        <li>Librarian-only book updates</li>
+    </ul>
+
+    <h3>Lending Management</h3>
+    <ul>
+        <li>Members can borrow one book per request</li>
+        <li>Borrowing allowed only if copies are available</li>
+        <li>Librarians process book returns</li>
+        <li>Availability updates automatically</li>
+    </ul>
+
+    <h2>REST API Endpoints</h2>
+
+    <h3>Authentication</h3>
+    <div class="endpoint">POST /api/auth/register</div>
+    <div class="endpoint">POST /api/auth/login</div>
+
+    <h3>Books</h3>
+    <div class="endpoint">GET /api/books</div>
+    <div class="endpoint">POST /api/books (ADMIN)</div>
+    <div class="endpoint">PUT /api/books/{id} (LIBRARIAN)</div>
+    <div class="endpoint">DELETE /api/books/{id} (ADMIN)</div>
+
+    <h3>Lending</h3>
+    <div class="endpoint">POST /api/books/{id}/borrow (MEMBER)</div>
+    <div class="endpoint">PUT /api/loans/{id}/return (LIBRARIAN)</div>
+
+    <h2>Technical Stack</h2>
+    <ul>
+        <li>Java 17</li>
+        <li>Spring Boot & Spring Security</li>
+        <li>Gradle</li>
+        <li>MySQL</li>
+        <li>JWT Authentication</li>
+        <li>Lombok & ModelMapper</li>
+        <li>Mockito & MockMvc</li>
+    </ul>
+
+    <h2>Why This Project Is Interview-Ready</h2>
+    <ul>
+        <li>Clear real-world business value</li>
+        <li>Strong security and role management</li>
+        <li>Inventory consistency handling</li>
+        <li>Clean, testable backend architecture</li>
+        <li>Excellent discussion points for interviews</li>
+    </ul>
+
+    <div class="footer">
+        © LibraCore – Backend System Design Project
+    </div>
+
+</div>
+
+</body>
+</html>
