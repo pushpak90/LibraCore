@@ -26,7 +26,7 @@ public class AuthController {
     public ResponseEntity<RegisterResponse> Registration(@Valid @RequestBody RegisterRequest request) {
         userService.register(request);
         return ResponseEntity
-                    .status(HttpStatus.OK)
+                    .status(HttpStatus.CREATED)
                     .body(new RegisterResponse("User Registered successfully!"));
     }
     
