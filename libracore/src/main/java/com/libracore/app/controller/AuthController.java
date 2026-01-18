@@ -3,6 +3,8 @@ package com.libracore.app.controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.libracore.app.dto.auth.LoginRequest;
+import com.libracore.app.dto.auth.LoginResponse;
 import com.libracore.app.dto.auth.RegisterRequest;
 import com.libracore.app.dto.auth.RegisterResponse;
 import com.libracore.app.service.UserService;
@@ -30,4 +32,9 @@ public class AuthController {
                     .body(new RegisterResponse("User Registered successfully!"));
     }
     
+    @PostMapping("/login")
+    public ResponseEntity<LoginResponse> login( @Valid @RequestBody LoginRequest request){
+        String token = userService.login(request.getEmail(), request.getPassword());
+        return ResponseEntity.ok(new LoginResponse(token));
+    }
 }
