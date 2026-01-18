@@ -7,6 +7,7 @@ import com.libracore.app.dto.auth.RegisterRequest;
 import com.libracore.app.entity.Role;
 import com.libracore.app.entity.User;
 import com.libracore.app.repository.UserRepository;
+import com.libracore.app.security.JwtUtil;
 import com.libracore.app.service.UserService;
 
 import lombok.RequiredArgsConstructor;
@@ -17,6 +18,7 @@ public class UserServiceImpl implements UserService{
     
     private final UserRepository userRepository;
     private final PasswordEncoder passwordEncoder;
+    private final JwtUtil jwtUtil;
 
     @Override
     public void register(RegisterRequest request) {
@@ -34,6 +36,15 @@ public class UserServiceImpl implements UserService{
                     
         userRepository.save(user);
 
+    }
+
+    @Override
+    public String login(String email, String password) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new RuntimeException("Invalid email or password"));
+        if(!passwordEncoder.matches(password, user.getPassword())){
+            throw new IllegalArgumentException("Invalid email or password");
+        }
+        return jwtUtil.generateToken(user.getEmail(), user.getPassword());
     }
     
 }
