@@ -40,5 +40,5 @@ public class Book {
     private String totalCopies;
 
     @Column(nullable = false)
-    private int availableCopes;
+    private int availableCopies;
 }
