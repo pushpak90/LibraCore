@@ -37,7 +37,7 @@ public class Book {
     private String category;
 
     @Column(nullable = false)
-    private String totalCopies;
+    private int totalCopies;
 
     @Column(nullable = false)
     private int availableCopies;
