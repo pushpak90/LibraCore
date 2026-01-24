@@ -1,0 +1,8 @@
+package com.dev.appointment_management.entity;
+
+public enum AppointmentStatus {
+    BOOKED,
+    CONFIRMED,
+    CANCELLED,
+    COMPLETED
+}
