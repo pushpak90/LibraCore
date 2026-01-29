@@ -8,6 +8,7 @@ import com.dev.appointment_management.mapper.UserMapper;
 import com.dev.appointment_management.repository.RoleRepository;
 import com.dev.appointment_management.repository.UserRepository;
 import com.dev.appointment_management.service.UserService;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -15,11 +16,12 @@ public class UserServiceImpl implements UserService {
 
     private final RoleRepository roleRepository;
     private final UserRepository userRepository;
-
-    public UserServiceImpl(RoleRepository roleRepository, UserRepository userRepository)
+    private final PasswordEncoder passwordEncoder;
+    public UserServiceImpl(RoleRepository roleRepository, UserRepository userRepository, PasswordEncoder passwordEncoder)
     {
         this.roleRepository = roleRepository;
         this.userRepository = userRepository;
+        this.passwordEncoder = passwordEncoder;
     }
 
 
@@ -33,6 +35,7 @@ public class UserServiceImpl implements UserService {
         Role role = roleRepository.findByName(request.getRole())
                 .orElseThrow(() -> new RuntimeException("Invalid Role"));
 
+        request.setPassword(passwordEncoder.encode(request.getPassword()));
         User user = UserMapper.toEntity(request, role);
         User saved = userRepository.save(user);
 
