@@ -6,6 +6,7 @@ import com.dev.appointment_management.service.ServiceService;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,6 +20,7 @@ public class ServiceController {
         this.serviceService = serviceService;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @PostMapping
     public ResponseEntity<ServiceResponse> createService(@Valid @RequestBody CreateServiceRequest request){
         ServiceResponse response = serviceService.createService(request);

@@ -7,6 +7,7 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.HttpStatusCode;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,12 +20,14 @@ public class AppointmentController {
         this.appointmentService = appointmentService;
     }
 
+    @PreAuthorize("hasRole('CUSTOMER')")
     @PostMapping
     public ResponseEntity<AppointmentResponse> bookAppointment(@Valid @RequestBody CreateAppointmentRequest request){
         AppointmentResponse appointmentResponse = appointmentService.bookAppointment(request);
         return new ResponseEntity<>(appointmentResponse, HttpStatus.CREATED);
     }
 
+    @PreAuthorize("hasAnyRole('CUSTOMER','ADMIN')")
     @GetMapping("/user/{userId}")
     public ResponseEntity<List<AppointmentResponse>> getAppointmentsByUser(
             @PathVariable Long userId) {
